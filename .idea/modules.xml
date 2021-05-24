@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Amazing_Numbers.iml" filepath="$PROJECT_DIR$/.idea/modules/Amazing_Numbers.iml" group="Amazing_Numbers" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Amazing Numbers/task/Amazing_Numbers-task.iml" filepath="$PROJECT_DIR$/.idea/modules/Amazing Numbers/task/Amazing_Numbers-task.iml" group="Amazing_Numbers/Amazing_Numbers-task" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Amazing Numbers/task/Amazing_Numbers-task_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Amazing Numbers/task/Amazing_Numbers-task_main.iml" group="Amazing_Numbers/Amazing_Numbers-task" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Amazing Numbers/task/Amazing_Numbers-task_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Amazing Numbers/task/Amazing_Numbers-task_test.iml" group="Amazing_Numbers/Amazing_Numbers-task" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/util.iml" filepath="$PROJECT_DIR$/.idea/modules/util/util.iml" group="Amazing_Numbers/util" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/util_main.iml" filepath="$PROJECT_DIR$/.idea/modules/util/util_main.iml" group="Amazing_Numbers/util" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/util/util_test.iml" filepath="$PROJECT_DIR$/.idea/modules/util/util_test.iml" group="Amazing_Numbers/util" />
+    </modules>
+  </component>
+</project>
