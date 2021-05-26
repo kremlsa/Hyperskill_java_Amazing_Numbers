@@ -83,7 +83,7 @@ public class Main {
                 return checker.checkNumber(input)
                         .checkCycle(input)
                         .checkMode(input)
-                        .isOk() ? "twoTypeMode" : "none";
+                        .checkModeTwo(input).isOk() ? "twoTypeMode" : "none";
             default:
                 return "none";
         }
@@ -412,6 +412,20 @@ class Checker {
             System.out.println("The property [" + input.split(" ")[2] + "] is wrong.\n" +
                     "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD]");
             isOk = false;
+        }
+        return this;
+    }
+
+    public Checker checkModeTwo(String input) {
+        if (!Main.props.contains(input.split(" ")[3].toLowerCase())) {
+            if (isOk) {
+            System.out.println("The property [" + input.split(" ")[3] + "] is wrong.\n" +
+                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD]");
+            isOk = false;
+            } else {
+                System.out.println("The properties [" + input.split(" ")[2] + ", " + input.split(" ")[3] + "] are wrong.\n" +
+                        "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY]");
+            }
         }
         return this;
     }
