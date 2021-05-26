@@ -1,5 +1,6 @@
 package numbers;
 
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +20,7 @@ public class Main {
             String input;
             int listSize = 1;
             String properties = "none";
+            String propertiesTwo = "none";
             String mode = "none";
             System.out.println("Enter a request:");
             input = sc.nextLine();
@@ -46,11 +48,13 @@ public class Main {
                 case "typeMode":
                     listSize = Integer.parseInt(input.split(" ")[1]);
                     properties = input.split(" ")[2].toLowerCase();
-                    printProps(initialValue, listSize, properties);
+                    printProps(initialValue, listSize, properties, properties);
                     break;
-                case "twotypeMode":
+                case "twoTypeMode":
                     listSize = Integer.parseInt(input.split(" ")[1]);
                     properties = input.split(" ")[2].toLowerCase();
+                    propertiesTwo = input.split(" ")[3].toLowerCase();
+                    printProps(initialValue, listSize, properties, propertiesTwo);
                     break;
 
             }
@@ -89,64 +93,14 @@ public class Main {
         }
     }
 
-    private static void printProps(String initialValue, int listSize, String properties) {
+    private static void printProps(String initialValue, int listSize, String properties, String propertiesTwo) {
         int finds = 0;
         List<Number> numbers = new ArrayList<>();
         while (finds < listSize) {
-            switch (properties) {
-                case "even":
-                    if (checkIsEven(initialValue)) {
-                        finds++;
-                        numbers.add(new Number(initialValue));}
-                    break;
-                case "odd":
-                    if (!checkIsEven(initialValue)) {
-                        finds++;
-                        numbers.add(new Number(initialValue));
-                    }
-                    break;
-                case "duck":
-                    if (checkIsDuck(initialValue)) {
-                        finds++;
-                        numbers.add(new Number(initialValue));
-                    }
-                    break;
-                case "buzz":
-                    if (checkIsBuzz(initialValue)) {
-                        finds++;
-                        numbers.add(new Number(initialValue));
-                    }
-                    break;
-                case "palindromic":
-                    if (checkIsPalindrome(initialValue)) {
-                        finds++;
-                        numbers.add(new Number(initialValue));
-                    }
-                    break;
-                case "gapful":
-                    if (checkIsGapful(initialValue)) {
-                        finds++;
-                        numbers.add(new Number(initialValue));
-                    }
-                    break;
-                case "spy":
-                    if (checkIsSpy(initialValue)) {
-                        finds++;
-                        numbers.add(new Number(initialValue));
-                    }
-                    break;
-                case "square":
-                    if (checkIsSquare(initialValue)) {
-                        finds++;
-                        numbers.add(new Number(initialValue));
-                    }
-                    break;
-                case "sunny":
-                    if (checkIsSunny(initialValue)) {
-                        finds++;
-                        numbers.add(new Number(initialValue));
-                    }
-                    break;
+            Number number = new Number(initialValue);
+            if (number.toString().contains(properties) && number.toString().contains(propertiesTwo)) {
+                numbers.add(number);
+                finds++;
             }
             initialValue = String.valueOf(Long.parseLong(initialValue) + 1L);
         }
@@ -423,7 +377,8 @@ class Checker {
                     "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD]");
             isOk = false;
             } else {
-                System.out.println("The properties [" + input.split(" ")[2] + ", " + input.split(" ")[3] + "] are wrong.\n" +
+                System.out.println("The properties [" + input.split(" ")[2] + ", "
+                        + input.split(" ")[3] + "] are wrong.\n" +
                         "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY]");
             }
         }

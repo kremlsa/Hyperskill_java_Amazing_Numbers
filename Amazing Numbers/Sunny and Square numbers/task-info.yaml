@@ -899,9 +899,9 @@ feedback_link: https://hyperskill.org/projects/184/stages/936/implement#comment
 status: Failed
 feedback:
   message: |-
-    Wrong answer in test #55
+    Error in test #79
 
-    Expected 8 non blank lines but actual output contains 1 lines.
+    In this test, the program is running for a long time, more than 15 seconds. Most likely, the program has gone into an infinite loop.
 
     Please find below the output of your program during this failed test.
     Note that the &#39;&gt;&#39; character indicates the beginning of the input line.
@@ -919,7 +919,6 @@ feedback:
     - separate the parameters with one space;
     - enter 0 to exit.
     Enter a request:
-    &gt; 1 7 spy palindromic
-    Enter a request:
-  time: Wed, 26 May 2021 08:33:17 UTC
+    &gt; 5 1 odd even
+  time: Wed, 26 May 2021 08:48:56 UTC
 record: 6
