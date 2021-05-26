@@ -10,6 +10,7 @@ public class Main {
     static Scanner sc = new Scanner(System.in);
     public static List<String> props = Arrays.asList("even", "odd", "buzz",
             "duck", "palindromic" , "gapful", "spy", "square", "sunny");
+    public static List<String> exl = Arrays.asList("even odd", "square sunny", "spy duck");
     public static void main(String[] args) {
         menu();
     }
@@ -87,7 +88,8 @@ public class Main {
                 return checker.checkNumber(input)
                         .checkCycle(input)
                         .checkMode(input)
-                        .checkModeTwo(input).isOk() ? "twoTypeMode" : "none";
+                        .checkModeTwo(input)
+                        .checkExclusive(input).isOk() ? "twoTypeMode" : "none";
             default:
                 return "none";
         }
@@ -380,6 +382,21 @@ class Checker {
                 System.out.println("The properties [" + input.split(" ")[2] + ", "
                         + input.split(" ")[3] + "] are wrong.\n" +
                         "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY]");
+            }
+        }
+        return this;
+    }
+
+    public Checker checkExclusive(String input) {
+        String first = input.split(" ")[2].toLowerCase();
+        String second = input.split(" ")[3].toLowerCase();
+        for (String ex : Main.exl) {
+            if (ex.contains(first) && ex.contains(second)) {
+                isOk = false;
+                System.out.println("The request contains mutually exclusive properties: [" +
+                        input.split(" ")[2] + ", " + input.split(" ")[3] + "]\n" +
+                        "There are no numbers with these properties.");
+                return this;
             }
         }
         return this;

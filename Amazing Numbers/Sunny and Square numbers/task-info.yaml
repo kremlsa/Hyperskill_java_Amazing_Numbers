@@ -896,29 +896,8 @@ files:
     }
   learner_created: false
 feedback_link: https://hyperskill.org/projects/184/stages/936/implement#comment
-status: Failed
+status: Solved
 feedback:
-  message: |-
-    Error in test #79
-
-    In this test, the program is running for a long time, more than 15 seconds. Most likely, the program has gone into an infinite loop.
-
-    Please find below the output of your program during this failed test.
-    Note that the &#39;&gt;&#39; character indicates the beginning of the input line.
-
-    ---
-
-    Welcome to Amazing Numbers!
-
-    Supported requests:
-    - enter a natural number to know its properties;
-    - enter two natural numbers to obtain the properties of the list:
-      * the first parameter represents a starting number;
-      * the second parameters show how many consecutive numbers are to be processed;
-    - two natural numbers and two properties to search for;
-    - separate the parameters with one space;
-    - enter 0 to exit.
-    Enter a request:
-    &gt; 5 1 odd even
-  time: Wed, 26 May 2021 08:48:56 UTC
+  message: Congratulations!
+  time: Wed, 26 May 2021 13:35:46 UTC
 record: 6
