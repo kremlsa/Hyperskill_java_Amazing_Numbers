@@ -896,5 +896,30 @@ files:
     }
   learner_created: false
 feedback_link: https://hyperskill.org/projects/184/stages/936/implement#comment
-status: Unchecked
+status: Failed
+feedback:
+  message: |-
+    Wrong answer in test #47
+
+    The request: &quot;1 10 odd girl&quot; has one wrong property. Expected message: &quot;property ... is wrong&quot;.
+
+    Please find below the output of your program during this failed test.
+    Note that the &#39;&gt;&#39; character indicates the beginning of the input line.
+
+    ---
+
+    Welcome to Amazing Numbers!
+
+    Supported requests:
+    - enter a natural number to know its properties;
+    - enter two natural numbers to obtain the properties of the list:
+      * the first parameter represents a starting number;
+      * the second parameters show how many consecutive numbers are to be processed;
+    - two natural numbers and two properties to search for;
+    - separate the parameters with one space;
+    - enter 0 to exit.
+    Enter a request:
+    &gt; 1 10 odd girl
+    Enter a request:
+  time: Wed, 26 May 2021 07:00:43 UTC
 record: 6

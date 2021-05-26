@@ -7,75 +7,85 @@ import java.util.Scanner;
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
-
+    public static List<String> props = Arrays.asList("even", "odd", "buzz",
+            "duck", "palindromic" , "gapful", "spy", "square", "sunny");
     public static void main(String[] args) {
         menu();
     }
 
     public static void menu() {
-        List<String> props = Arrays.asList("even", "odd", "buzz",
-                "duck", "palindromic" , "gapful", "spy");
         printInstructions();
         while (true) {
             String input;
             int listSize = 1;
             String properties = "none";
-            List<Number> numbers = new ArrayList<>();
+            String mode = "none";
             System.out.println("Enter a request:");
             input = sc.nextLine();
             if (input.equals("")) {
                 printInstructions();
                 continue;
             }
-            if (!input.split(" ")[0].matches("[0-9 -]+")) {
-                System.out.println("The first parameter should be a natural number or zero.");
-                continue;
-            }
             if (input.equals("0")) {
                 System.out.println("Goodbye!");
                 break;
             }
-
-            if (Long.parseLong(input.split(" ")[0]) < 0L) {
-                System.out.println("The first parameter should be a natural number or zero.");
-                continue;
-            }
-
-            if(input.split(" ").length > 1) {
-                if (Long.parseLong(input.split(" ")[1]) < 0L) {
-                    System.out.println("The second parameter should be a natural number or zero.");
-                    continue;
-                }
-                listSize = Integer.parseInt(input.split(" ")[1]);
-
-                if (input.split(" ").length > 2) {
-                    if (!props.contains(input.split(" ")[2].toLowerCase())) {
-                        System.out.println("The property [" + input.split(" ")[2] + "] is wrong.\n" +
-                                "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY]");
-                        continue;
-                    }
-                    properties = input.split(" ")[2].toLowerCase();
-                }
-            }
+            mode = getMode(input);
+            if (mode.equals("none")) continue;
 
             String initialValue = removeZeroes(input.split(" ")[0]);
 
-            switch (properties) {
-                case "none":
-                    for (int i = 0; i < listSize; i++) {
-                        numbers.add(new Number(initialValue));
-                        initialValue = String.valueOf(Long.parseLong(initialValue) + 1L);
-                    }
-                    if (input.split(" ").length > 1) {
-                        numbers.forEach(x -> System.out.println(x.toString()));
-                    } else {
-                        numbers.forEach(Number::printOne);
-                    }
+            switch (mode) {
+                case "singleMode":
+                    new Number(initialValue).printOne();
                     break;
-                    default:
-                        printProps(initialValue, listSize, properties);
-                        break;
+                case "cycleMode":
+                    listSize = Integer.parseInt(input.split(" ")[1]);
+                    printCycle(input, initialValue, listSize);
+                    break;
+                case "typeMode":
+                    listSize = Integer.parseInt(input.split(" ")[1]);
+                    properties = input.split(" ")[2].toLowerCase();
+                    printProps(initialValue, listSize, properties);
+                    break;
+                case "twotypeMode":
+                    listSize = Integer.parseInt(input.split(" ")[1]);
+                    properties = input.split(" ")[2].toLowerCase();
+                    break;
+
             }
+        }
+    }
+
+    public static void printCycle(String input, String initialValue, int listSize) {
+        List<Number> numbers = new ArrayList<>();
+        for (int i = 0; i < listSize; i++) {
+            numbers.add(new Number(initialValue));
+            initialValue = String.valueOf(Long.parseLong(initialValue) + 1L);
+        }
+        numbers.forEach(x -> System.out.println(x.toString()));
+    }
+
+    private static String getMode(String input) {
+        Checker checker = new Checker();
+        int size = input.split(" ").length;
+        switch (size) {
+            case 1:
+                return checker.checkNumber(input).isOk() ? "singleMode" : "none";
+            case 2:
+                return checker.checkNumber(input)
+                        .checkCycle(input).isOk() ? "cycleMode" : "none";
+            case 3:
+                return checker.checkNumber(input)
+                        .checkCycle(input)
+                        .checkMode(input).isOk() ? "typeMode" : "none";
+            case 4:
+                return checker.checkNumber(input)
+                        .checkCycle(input)
+                        .checkMode(input)
+                        .isOk() ? "twoTypeMode" : "none";
+            default:
+                return "none";
         }
     }
 
@@ -125,6 +135,18 @@ public class Main {
                         numbers.add(new Number(initialValue));
                     }
                     break;
+                case "square":
+                    if (checkIsSquare(initialValue)) {
+                        finds++;
+                        numbers.add(new Number(initialValue));
+                    }
+                    break;
+                case "sunny":
+                    if (checkIsSunny(initialValue)) {
+                        finds++;
+                        numbers.add(new Number(initialValue));
+                    }
+                    break;
             }
             initialValue = String.valueOf(Long.parseLong(initialValue) + 1L);
         }
@@ -137,9 +159,9 @@ public class Main {
                 "Supported requests:\n" +
                 "- enter a natural number to know its properties;\n" +
                 "- enter two natural numbers to obtain the properties of the list:\n" +
-                "  * the first parameter represents a starting number;\n" +
-                "  * the second parameter shows how many consecutive numbers are to be printed;\n" +
-                "- two natural numbers and a property to search for;\n" +
+                "  * the first parameter represents a starting number;\n" +
+                "  * the second parameters show how many consecutive numbers are to be processed;\n" +
+                "- two natural numbers and two properties to search for;\n" +
                 "- separate the parameters with one space;\n" +
                 "- enter 0 to exit.");
     }
@@ -149,20 +171,20 @@ public class Main {
     }
 
     public static boolean checkIsEven(String in) {
-        return Long.valueOf(in) % 2 == 0 ? true : false;
+        return Long.parseLong(in) % 2 == 0;
     }
 
     public static boolean checkIsBuzz(String in) {
         long cutNumber;
         boolean result = false;
-        long lastDigit = Long.valueOf(in.substring(in.length() - 1));
-        Long num = Long.valueOf(in);
+        long lastDigit = Long.parseLong(in.substring(in.length() - 1));
+        long num = Long.parseLong(in);
         if (num > 9) {
-            cutNumber = Long.valueOf(in.substring(0, in.length() - 1));
+            cutNumber = Long.parseLong(in.substring(0, in.length() - 1));
         } else {
             cutNumber = num;
         }
-        Long buzzCheck = (cutNumber - lastDigit * 2) % 7;
+        long buzzCheck = (cutNumber - lastDigit * 2) % 7;
         if (buzzCheck == 0L) {
             result = true;
         } else {
@@ -345,10 +367,54 @@ class Number {
                 "        duck: " + isDuck + "\n" +
                 "        palindromic: " + isPalindrome + "\n" +
                 "        gapful: " + isGapful + "\n" +
-                "        spy: " + isSpy + "\n" +
-                "        square: " + isSquare + "\n" +
-                "        sunny: " + isSunny + "\n" +
+                "        spy: " + isSpy + "\n" +
+                "        square: " + isSquare + "\n" +
+                "        sunny: " + isSunny + "\n" +
                 "        even: " + isEven + "\n" +
                 "         odd: " + !isEven);
     }
+}
+
+class Checker {
+    public boolean isOk = true;
+
+    public boolean isOk() {
+        return isOk;
+    }
+
+    public void setOk(boolean ok) {
+        isOk = ok;
+    }
+
+    public Checker checkNumber(String input) {
+        if (!input.split(" ")[0].matches("[0-9 -]+")) {
+            System.out.println("The first parameter should be a natural number or zero.");
+            isOk = false;
+            return this;
+        }
+        if (Long.parseLong(input.split(" ")[0]) < 0L) {
+            System.out.println("The first parameter should be a natural number or zero.");
+            isOk = false;
+        }
+        return this;
+    }
+
+    public Checker checkCycle(String input) {
+        if (Long.parseLong(input.split(" ")[1]) < 0L) {
+            System.out.println("The second parameter should be a natural number or zero.");
+            isOk = false;
+        }
+        return this;
+    }
+
+    public Checker checkMode(String input) {
+        if (!Main.props.contains(input.split(" ")[2].toLowerCase())) {
+            System.out.println("The property [" + input.split(" ")[2] + "] is wrong.\n" +
+                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD]");
+            isOk = false;
+        }
+        return this;
+    }
+
+
 }
