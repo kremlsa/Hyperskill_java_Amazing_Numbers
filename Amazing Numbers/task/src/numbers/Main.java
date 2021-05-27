@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Main {
     static Scanner sc = new Scanner(System.in);
     public static List<String> props = Arrays.asList("even", "odd", "buzz",
-            "duck", "palindromic" , "gapful", "spy", "square", "sunny");
+            "duck", "palindromic" , "gapful", "spy", "square", "sunny", "jumping");
     public static List<String> exl = Arrays.asList("even odd", "square sunny", "spy duck");
     public static void main(String[] args) {
         menu();
@@ -116,10 +116,10 @@ public class Main {
                 "- enter a natural number to know its properties;\n" +
                 "- enter two natural numbers to obtain the properties of the list:\n" +
                 "  * the first parameter represents a starting number;\n" +
-                "  * the second parameters show how many consecutive numbers are to be processed;\n" +
-                "- two natural numbers and two properties to search for;\n" +
+                "  * the second parameter shows how many consecutive numbers are to be printed;\n" +
+                "- two natural numbers and properties to search for;\n" +
                 "- separate the parameters with one space;\n" +
-                "- enter 0 to exit.");
+                "- enter 0 to exit");
     }
 
     public static boolean checkIsDuck(String in) {
@@ -396,7 +396,7 @@ class Checker {
     public Checker checkMode(String input) {
         if (!Main.props.contains(input.split(" ")[2].toLowerCase())) {
             System.out.println("The property [" + input.split(" ")[2] + "] is wrong.\n" +
-                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD]");
+                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING]");
             isOk = false;
         }
         return this;
@@ -406,12 +406,12 @@ class Checker {
         if (!Main.props.contains(input.split(" ")[3].toLowerCase())) {
             if (isOk) {
             System.out.println("The property [" + input.split(" ")[3] + "] is wrong.\n" +
-                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD]");
+                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING]");
             isOk = false;
             } else {
                 System.out.println("The properties [" + input.split(" ")[2] + ", "
                         + input.split(" ")[3] + "] are wrong.\n" +
-                        "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY]");
+                        "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, JUMPING]");
             }
         }
         return this;
