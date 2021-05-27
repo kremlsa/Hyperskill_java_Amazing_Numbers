@@ -205,6 +205,23 @@ public class Main {
         long sr = (long) Math.sqrt(Long.parseLong(input));
         return ((sr * sr) == Long.parseLong(input));
     }
+
+    public static boolean checkIsJumping(String input) {
+        if (input.length() == 1) return true;
+        boolean isOk = true;
+        int deltaNext = 0;
+        int prev = Integer.parseInt(String.valueOf(input.charAt(0)));
+        for (int i = 1; i < input.length(); i++) {
+            int current = Integer.parseInt(String.valueOf(input.charAt(i)));
+            int deltaPrev =  Math.abs(current - prev);
+            if (i < input.length() - 1) {
+                deltaNext = Math.abs(Integer.parseInt(String.valueOf(input.charAt(i + 1))) - current);
+            } else deltaNext = 1;
+            if (deltaPrev != 1 || deltaNext != 1) isOk = false;
+            prev = current;
+        }
+        return isOk;
+    }
 }
 
 class Number {
@@ -217,6 +234,16 @@ class Number {
     boolean isSpy = false;
     boolean isSquare = false;
     boolean isSunny = false;
+
+    public boolean isJumping() {
+        return isJumping;
+    }
+
+    public void setJumping(boolean jumping) {
+        isJumping = jumping;
+    }
+
+    boolean isJumping = false;
 
     public boolean isSpy() {
         return isSpy;
@@ -252,6 +279,7 @@ class Number {
         this.isSpy = Main.checkIsSpy(input);
         this.isSquare = Main.checkIsSquare(input);
         this.isSunny = Main.checkIsSunny(input);
+        this.isJumping = Main.checkIsJumping(input);
     }
 
     public boolean isGapful() {
@@ -312,7 +340,8 @@ class Number {
                 + (isGapful ? "gapful, " : "")
                 + (isSquare ? "square, " : "")
                 + (isSunny ? "sunny, " : "")
-                + (isSpy ? "spy, " : "");
+                + (isSpy ? "spy, " : "")
+                + (isJumping ? "jumping, " : "");
         result = result.substring(0, result.length() - 2);
         return result;
     }
@@ -327,7 +356,8 @@ class Number {
                 "        square: " + isSquare + "\n" +
                 "        sunny: " + isSunny + "\n" +
                 "        even: " + isEven + "\n" +
-                "         odd: " + !isEven);
+                "         odd: " + !isEven + "\n" +
+                "         jumping: " + isJumping);
     }
 }
 
