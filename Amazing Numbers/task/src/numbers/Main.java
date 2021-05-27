@@ -1,21 +1,24 @@
 package numbers;
 
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
     public static List<String> props = Arrays.asList("even", "odd", "buzz",
             "duck", "palindromic" , "gapful", "spy", "square", "sunny", "jumping");
-    public static List<String> exl = Arrays.asList("even odd", "square sunny", "spy duck");
+    public static List<String> exl1 = new ArrayList<String> (Arrays.asList("even", "odd"));
+    public static List<String> exl2 = Arrays.asList("square", "sunny");
+    public static List<String> exl3 = Arrays.asList("spy", "duck");
+
+    List<String> propertiesList;
     public static void main(String[] args) {
         menu();
     }
 
     public static void menu() {
+        List<String> propertiesList;
+
         printInstructions();
         while (true) {
             String input;
@@ -47,19 +50,22 @@ public class Main {
                     printCycle(input, initialValue, listSize);
                     break;
                 case "typeMode":
-                    listSize = Integer.parseInt(input.split(" ")[1]);
-                    properties = input.split(" ")[2].toLowerCase();
-                    printProps(initialValue, listSize, properties, properties);
-                    break;
                 case "twoTypeMode":
                     listSize = Integer.parseInt(input.split(" ")[1]);
-                    properties = input.split(" ")[2].toLowerCase();
-                    propertiesTwo = input.split(" ")[3].toLowerCase();
-                    printProps(initialValue, listSize, properties, propertiesTwo);
+                    propertiesList = parseProperties(input);
+                    printProps(initialValue, listSize, propertiesList);
                     break;
 
             }
         }
+    }
+
+    public static List<String> parseProperties(String input) {
+        List<String> propertiesList = new ArrayList<>();
+        for (int i = 2; i < input.split(" ").length; i++) {
+            propertiesList.add(input.split(" ")[i].toLowerCase());
+        }
+        return propertiesList;
     }
 
     public static void printCycle(String input, String initialValue, int listSize) {
@@ -84,23 +90,20 @@ public class Main {
                 return checker.checkNumber(input)
                         .checkCycle(input)
                         .checkMode(input).isOk() ? "typeMode" : "none";
-            case 4:
+            default:
                 return checker.checkNumber(input)
                         .checkCycle(input)
-                        .checkMode(input)
                         .checkModeTwo(input)
                         .checkExclusive(input).isOk() ? "twoTypeMode" : "none";
-            default:
-                return "none";
         }
     }
 
-    private static void printProps(String initialValue, int listSize, String properties, String propertiesTwo) {
+    private static void printProps(String initialValue, int listSize, List<String> propertiesList) {
         int finds = 0;
         List<Number> numbers = new ArrayList<>();
         while (finds < listSize) {
             Number number = new Number(initialValue);
-            if (number.toString().contains(properties) && number.toString().contains(propertiesTwo)) {
+            if (number.toList().containsAll(propertiesList)) {
                 numbers.add(number);
                 finds++;
             }
@@ -359,6 +362,21 @@ class Number {
                 "         odd: " + !isEven + "\n" +
                 "         jumping: " + isJumping);
     }
+
+    public List<String> toList() {
+        List<String> result = new ArrayList<>();
+        if (isBuzz) result.add("buzz");
+        if (isDuck) result.add("duck");
+        if(isPalindrome) result.add("palindromic");
+        if(isGapful) result.add("gapful");
+        if(isSpy) result.add("spy");
+        if(isSquare) result.add("square");
+        if(isSunny) result.add("sunny");
+        if(isEven) result.add("even");
+        if(!isEven) result.add("odd");
+        if(isJumping) result.add("jumping");
+        return result;
+    }
 }
 
 class Checker {
@@ -403,32 +421,55 @@ class Checker {
     }
 
     public Checker checkModeTwo(String input) {
-        if (!Main.props.contains(input.split(" ")[3].toLowerCase())) {
-            if (isOk) {
-            System.out.println("The property [" + input.split(" ")[3] + "] is wrong.\n" +
-                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING]");
-            isOk = false;
+        String wrongProps = "[";
+        int wrongs = 0;
+        for (int i = 2; i < input.split(" ").length; i++) {
+            if (!Main.props.contains(input.split(" ")[i].toLowerCase())) {
+                wrongProps += input.split(" ")[i] + ", ";
+                wrongs++;
+                isOk = false;
+            }
+        }
+        if (wrongProps.length() > 3) {
+            wrongProps = wrongProps.substring(0, wrongProps.length() - 2);
+        }
+        wrongProps += "]";
+        if (!isOk) {
+            if (wrongs > 1) {
+                System.out.println("The properties " + wrongProps + " are wrong.\n" +
+                        "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING]");
             } else {
-                System.out.println("The properties [" + input.split(" ")[2] + ", "
-                        + input.split(" ")[3] + "] are wrong.\n" +
-                        "Available properties: [EVEN, ODD, BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, JUMPING]");
+                System.out.println("The property " + wrongProps + " is wrong.\n" +
+                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING]");
             }
         }
         return this;
     }
 
     public Checker checkExclusive(String input) {
-        String first = input.split(" ")[2].toLowerCase();
-        String second = input.split(" ")[3].toLowerCase();
-        for (String ex : Main.exl) {
-            if (ex.contains(first) && ex.contains(second)) {
-                isOk = false;
-                System.out.println("The request contains mutually exclusive properties: [" +
-                        input.split(" ")[2] + ", " + input.split(" ")[3] + "]\n" +
-                        "There are no numbers with these properties.");
-                return this;
-            }
+        List<String> propertiesList = Main.parseProperties(input);
+        if (propertiesList.containsAll(Main.exl1)) {
+            isOk = false;
+            System.out.println("The request contains mutually exclusive properties: [" +
+                    Main.exl1.get(0) + ", " + Main.exl1.get(1) + "]\n" +
+                    "There are no numbers with these properties.");
+            return this;
         }
+        if (propertiesList.containsAll(Main.exl2)) {
+            isOk = false;
+            System.out.println("The request contains mutually exclusive properties: [" +
+                    Main.exl2.get(0) + ", " + Main.exl2.get(1) + "]\n" +
+                    "There are no numbers with these properties.");
+            return this;
+        }
+        if (propertiesList.containsAll(Main.exl3)) {
+            isOk = false;
+            System.out.println("The request contains mutually exclusive properties: [" +
+                    Main.exl3.get(0) + ", " + Main.exl3.get(1) + "]\n" +
+                    "There are no numbers with these properties.");
+            return this;
+        }
+
         return this;
     }
 
