@@ -6,21 +6,44 @@ import java.util.*;
 public class Main {
     static Scanner sc = new Scanner(System.in);
     public static List<String> props = Arrays.asList("even", "odd", "buzz",
-            "duck", "palindromic" , "gapful", "spy", "square", "sunny", "jumping");
-    public static List<String> exl1 = new ArrayList<String> (Arrays.asList("even", "odd"));
-    public static List<String> exl2 = Arrays.asList("square", "sunny");
-    public static List<String> exl3 = Arrays.asList("spy", "duck");
+            "duck", "palindromic" , "gapful", "spy", "square", "sunny", "jumping", "happy", "sad",
+            "-even", "-odd", "-buzz",
+            "-duck", "-palindromic" , "-gapful", "-spy", "-square", "-sunny", "-jumping", "-happy", "-sad");
+    public static Map<String, String> exlusive = new HashMap<String, String>() {{
+        put("square", "sunny");
+        put("spy", "duck");
+        put("happy", "sad");
+        put("odd", "even");
+        put("-odd", "-even");
+        put("-square", "-sunny");
+        put("-spy", "-duck");
+        put("-happy", "-sad");
+    }};
+    public static Map<String, String> exlusiveNeg = new HashMap<String, String>() {{
+        put("even", "-even");
+        put("odd", "-odd");
+        put("buzz", "-buzz");
+        put("duck", "-duck");
+        put("palindromic", "-palindromic");
+        put("gapful", "-gapful");
+        put("spy", "-spy");
+        put("square", "-square");
+        put("sunny", "-sunny");
+        put("jumping", "-jumping");
+        put("happy", "-happy");
+        put("sad", "-sad");
+    }};
 
-    List<String> propertiesList;
+    static List<String> propertiesList;
     public static void main(String[] args) {
         menu();
     }
 
     public static void menu() {
-        List<String> propertiesList;
 
         printInstructions();
         while (true) {
+
             String input;
             int listSize = 1;
             String properties = "none";
@@ -101,11 +124,29 @@ public class Main {
     private static void printProps(String initialValue, int listSize, List<String> propertiesList) {
         int finds = 0;
         List<Number> numbers = new ArrayList<>();
+        List<String> posProps = new ArrayList<>();
+        List<String> negProps = new ArrayList<>();
+        for (String prop : propertiesList) {
+            if (prop.startsWith("-")) {
+                negProps.add(prop.substring(1));
+            } else {
+                posProps.add(prop);
+            }
+        }
+
         while (finds < listSize) {
             Number number = new Number(initialValue);
-            if (number.toList().containsAll(propertiesList)) {
-                numbers.add(number);
-                finds++;
+            boolean isContainsNegative = false;
+            if (number.toList().containsAll(posProps)) {
+                for (String neg : negProps) {
+                    if (number.toList().contains(neg)) {
+                        isContainsNegative = true;
+                    }
+                }
+                if (!isContainsNegative) {
+                    numbers.add(number);
+                    finds++;
+                }
             }
             initialValue = String.valueOf(Long.parseLong(initialValue) + 1L);
         }
@@ -121,8 +162,9 @@ public class Main {
                 "  * the first parameter represents a starting number;\n" +
                 "  * the second parameter shows how many consecutive numbers are to be printed;\n" +
                 "- two natural numbers and properties to search for;\n" +
+                "- a property preceded by minus must not be present in numbers;\n" +
                 "- separate the parameters with one space;\n" +
-                "- enter 0 to exit");
+                "- enter 0 to exit.");
     }
 
     public static boolean checkIsDuck(String in) {
@@ -225,6 +267,25 @@ public class Main {
         }
         return isOk;
     }
+
+    public static long isHappyNumber(long num){
+        long rem = 0, sum = 0;
+        while(num > 0){
+            rem = num%10L;
+            sum = sum + (rem*rem);
+            num = num/10L;
+        }
+        return sum;
+    }
+
+    public static boolean checkIsHappy(String input) {
+
+        long result = Long.parseLong(input);
+        while(result != 1 && result != 4){
+            result = isHappyNumber(result);
+        }
+        return result == 1;
+    }
 }
 
 class Number {
@@ -237,6 +298,16 @@ class Number {
     boolean isSpy = false;
     boolean isSquare = false;
     boolean isSunny = false;
+
+    public boolean isHappy() {
+        return isHappy;
+    }
+
+    public void setHappy(boolean happy) {
+        isHappy = happy;
+    }
+
+    boolean isHappy = false;
 
     public boolean isJumping() {
         return isJumping;
@@ -283,6 +354,7 @@ class Number {
         this.isSquare = Main.checkIsSquare(input);
         this.isSunny = Main.checkIsSunny(input);
         this.isJumping = Main.checkIsJumping(input);
+        this.isHappy = Main.checkIsHappy(input);
     }
 
     public boolean isGapful() {
@@ -344,7 +416,8 @@ class Number {
                 + (isSquare ? "square, " : "")
                 + (isSunny ? "sunny, " : "")
                 + (isSpy ? "spy, " : "")
-                + (isJumping ? "jumping, " : "");
+                + (isJumping ? "jumping, " : "")
+                + (isHappy ? "happy, " : "sad, ");
         result = result.substring(0, result.length() - 2);
         return result;
     }
@@ -359,8 +432,10 @@ class Number {
                 "        square: " + isSquare + "\n" +
                 "        sunny: " + isSunny + "\n" +
                 "        even: " + isEven + "\n" +
-                "         odd: " + !isEven + "\n" +
-                "         jumping: " + isJumping);
+                "        odd: " + !isEven + "\n" +
+                "        jumping: " + isJumping  + "\n" +
+                "        happy: " + isHappy  + "\n" +
+                "        sad: " + !isHappy);
     }
 
     public List<String> toList() {
@@ -374,6 +449,8 @@ class Number {
         if(isSunny) result.add("sunny");
         if(isEven) result.add("even");
         if(!isEven) result.add("odd");
+        if(isHappy) result.add("happy");
+        if(!isHappy) result.add("sad");
         if(isJumping) result.add("jumping");
         return result;
     }
@@ -414,7 +491,8 @@ class Checker {
     public Checker checkMode(String input) {
         if (!Main.props.contains(input.split(" ")[2].toLowerCase())) {
             System.out.println("The property [" + input.split(" ")[2] + "] is wrong.\n" +
-                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING]");
+                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL," +
+                    " SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING, HAPPY, SAD]");
             isOk = false;
         }
         return this;
@@ -437,10 +515,12 @@ class Checker {
         if (!isOk) {
             if (wrongs > 1) {
                 System.out.println("The properties " + wrongProps + " are wrong.\n" +
-                        "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING]");
+                        "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL," +
+                        " SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING, HAPPY, SAD]");
             } else {
                 System.out.println("The property " + wrongProps + " is wrong.\n" +
-                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL, SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING]");
+                    "Available properties: [BUZZ, DUCK, PALINDROMIC, GAPFUL," +
+                        " SPY, SQUARE, SUNNY, EVEN, ODD, JUMPING, HAPPY, SAD]");
             }
         }
         return this;
@@ -448,28 +528,31 @@ class Checker {
 
     public Checker checkExclusive(String input) {
         List<String> propertiesList = Main.parseProperties(input);
-        if (propertiesList.containsAll(Main.exl1)) {
-            isOk = false;
-            System.out.println("The request contains mutually exclusive properties: [" +
-                    Main.exl1.get(0) + ", " + Main.exl1.get(1) + "]\n" +
-                    "There are no numbers with these properties.");
-            return this;
-        }
-        if (propertiesList.containsAll(Main.exl2)) {
-            isOk = false;
-            System.out.println("The request contains mutually exclusive properties: [" +
-                    Main.exl2.get(0) + ", " + Main.exl2.get(1) + "]\n" +
-                    "There are no numbers with these properties.");
-            return this;
-        }
-        if (propertiesList.containsAll(Main.exl3)) {
-            isOk = false;
-            System.out.println("The request contains mutually exclusive properties: [" +
-                    Main.exl3.get(0) + ", " + Main.exl3.get(1) + "]\n" +
-                    "There are no numbers with these properties.");
-            return this;
+        for (Map.Entry<String, String> entry : Main.exlusive.entrySet()) {
+            List<String> exl = new ArrayList<>();
+            exl.add(entry.getKey());
+            exl.add(entry.getValue());
+            if (propertiesList.containsAll(exl)) {
+                isOk = false;
+                System.out.println("The request contains mutually exclusive properties: [" +
+                        exl.get(0) + ", " + exl.get(1) + "]\n" +
+                        "There are no numbers with these properties.");
+                return this;
+            }
         }
 
+        for (Map.Entry<String, String> entry : Main.exlusiveNeg.entrySet()) {
+            List<String> exl = new ArrayList<>();
+            exl.add(entry.getKey());
+            exl.add(entry.getValue());
+            if (propertiesList.containsAll(exl)) {
+                isOk = false;
+                System.out.println("The request contains mutually exclusive properties: [" +
+                        exl.get(0) + ", " + exl.get(1) + "]\n" +
+                        "There are no numbers with these properties.");
+                return this;
+            }
+        }
         return this;
     }
 
